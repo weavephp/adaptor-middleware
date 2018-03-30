@@ -51,7 +51,7 @@ abstract class Base
 		// Cope with invoked single-pass and invoked double-pass middlewares
 		$this->adaptorNext = is_callable($response) ? $response : $next;
 		$this->adaptorResponse = is_callable($response) ? null : $response;
-		return $this->do($request);
+		return $this->run($request);
 	}
 
 	/**
@@ -71,7 +71,7 @@ abstract class Base
 	public function process(Request $request, $next)
 	{
 		$this->adaptorNext = $next;
-		return $this->do($request);
+		return $this->run($request);
 	}
 
 	/**
@@ -81,7 +81,7 @@ abstract class Base
 	 *
 	 * @return mixed Some form of PSR7-style Response.
 	 */
-	abstract protected function do(Request $request);
+	abstract protected function run(Request $request);
 
 	/**
 	 * Call this from within your do() method to chain to the next middleware in the stack.
