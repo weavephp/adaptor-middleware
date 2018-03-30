@@ -100,10 +100,11 @@ abstract class Base
 				return $this->adaptorNext->process($request);
 			}
 		}
+		$next = $this->adaptorNext;
 		if ($this->adaptorResponse !== null) {
-			return ($this->adaptorNext)($request, $this->adaptorResponse);
+			return $next($request, $this->adaptorResponse);
 		}
-		return ($this->adaptorNext)($request);
+		return $next($request);
 	}
 
 	/**
