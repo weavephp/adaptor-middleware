@@ -90,7 +90,7 @@ abstract class Base
 	 *
 	 * @return mixed Some form of PSR7-style Response.
 	 */
-	private function chain(Request $request)
+	protected function chain(Request $request)
 	{
 		if (is_object($this->adaptorNext)) {
 			if (method_exists($this->adaptorNext, 'handle')) {
@@ -101,9 +101,9 @@ abstract class Base
 			}
 		}
 		if ($this->adaptorResponse !== null) {
-			return $this->adaptorNext($request, $this->adaptorResponse);
+			return ($this->adaptorNext)($request, $this->adaptorResponse);
 		}
-		return $this->adaptorNext($request);
+		return ($this->adaptorNext)($request);
 	}
 
 	/**
