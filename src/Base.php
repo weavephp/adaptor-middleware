@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 /**
  * Weave Middleware Adaptor.
  */
@@ -22,14 +25,14 @@ abstract class Base
 	 *
 	 * @var mixed
 	 */
-	private $adaptorNext;
+	private mixed $adaptorNext;
 
 	/**
 	 * The response object, if one was supplied.
 	 *
 	 * @var null|Response
 	 */
-	private $adaptorResponse = null;
+	private ?Response $adaptorResponse = null;
 
 	/**
 	 * Invoke entrypoint.
@@ -40,13 +43,13 @@ abstract class Base
 	 * The second parameter might be a PSR7-style response instance (for double-pass)
 	 * or it might be some form of callable (for single-pass).
 	 *
-	 * @param Request  $request  The PSR7 request.
-	 * @param mixed    $response Some form of PSR7-style response or a PSR15 delegate.
-	 * @param callable $next     Some form of callable to the next pipeline entry.
+	 * @param Request   $request  The PSR7 request.
+	 * @param mixed     $response Some form of PSR7-style response or a PSR15 delegate.
+	 * @param ?callable $next     Some form of callable to the next pipeline entry.
 	 *
 	 * @return mixed Some form of PSR7-style Response.
 	 */
-	public function __invoke(Request $request, $response, $next = null)
+	public function __invoke(Request $request, mixed $response, ?callable $next = null): mixed
 	{
 		// Cope with invoked single-pass and invoked double-pass middlewares
 		$this->adaptorNext = is_callable($response) ? $response : $next;
@@ -68,7 +71,7 @@ abstract class Base
 	 *
 	 * @return mixed Some form of PSR7-style Response.
 	 */
-	public function process(Request $request, $next)
+	public function process(Request $request, mixed $next): mixed
 	{
 		$this->adaptorNext = $next;
 		return $this->run($request);
@@ -81,7 +84,7 @@ abstract class Base
 	 *
 	 * @return mixed Some form of PSR7-style Response.
 	 */
-	abstract protected function run(Request $request);
+	abstract protected function run(Request $request): mixed;
 
 	/**
 	 * Call this from within your do() method to chain to the next middleware in the stack.
@@ -90,7 +93,7 @@ abstract class Base
 	 *
 	 * @return mixed Some form of PSR7-style Response.
 	 */
-	protected function chain(Request $request)
+	protected function chain(Request $request): mixed
 	{
 		if (is_object($this->adaptorNext)) {
 			if (method_exists($this->adaptorNext, 'handle')) {
@@ -112,9 +115,9 @@ abstract class Base
 	 *
 	 * Rarely needed - usually if you think you need the response object you are doing it wrong!
 	 *
-	 * @return Response|null
+	 * @return ?Response
 	 */
-	protected function getResponseObject()
+	protected function getResponseObject(): ?Response
 	{
 		return $this->adaptorResponse;
 	}
